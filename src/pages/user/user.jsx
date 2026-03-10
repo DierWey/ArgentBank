@@ -1,6 +1,12 @@
+import Welcome from "../../components/welcome/welcome";
+import Accounts from "../../components/accounts/accounts";
+
 function User() {
     return (
-        <h1>Page utilisateur</h1>
+        <main class="main bg-dark">
+            <Welcome />
+            <Accounts />
+        </main>
     )
 }
 
