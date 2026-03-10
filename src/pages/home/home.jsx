@@ -1,6 +1,12 @@
+import Banner from "../../components/banner/banner.jsx"
+import Features from "../../components/features/features.jsx"
+
 function Home() {
     return (
-        <h1>Home</h1>
+        <main>
+            <Banner />
+            <Features/>
+        </main>
     )
 }
 

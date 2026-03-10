@@ -1,4 +1,4 @@
-function Feature({srcImg, altImg, title, description}) {
+function Feature({ srcImg, altImg, title, description }) {
     return (
         <div className="feature-item">
           <img src={srcImg} alt={altImg} className="feature-icon" />
@@ -8,4 +8,4 @@ function Feature({srcImg, altImg, title, description}) {
     )
 }
 
-export default Feature
+export default Feature;
