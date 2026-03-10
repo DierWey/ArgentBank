@@ -1,5 +1,3 @@
-import "../../main.css"
-
 function Banner() {
     return (
         <div className="hero">

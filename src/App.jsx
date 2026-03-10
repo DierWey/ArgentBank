@@ -9,17 +9,15 @@ import Footer from "./components/footer/footer.jsx";
 
 function App() {
     return (
-        <Router>
-            <div className="page-content">
-                <Header />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/signin" element={<Signin />} />
-                    <Route path="/user" element={<User />} />
-                    <Route path="*" element={<Error />} />
-                </Routes>
-                <Footer />
-            </div>
+        <Router>            
+            <Header />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signin" element={<Signin />} />
+                <Route path="/user" element={<User />} />
+                <Route path="*" element={<Error />} />
+            </Routes>
+            <Footer />            
         </Router>
     );
 }

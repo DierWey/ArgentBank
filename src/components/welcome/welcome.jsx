@@ -1,12 +1,12 @@
-const userName = "Tony Jarvis";
+const userName = "Tony Jarvis"
 
 function Welcome() {
     return (
-      <div class="header">
+      <div className="header">
         <h1>Welcome back
             <br />{userName}!
         </h1>
-        <button class="edit-button">Edit Name</button>
+        <button className="edit-button">Edit Name</button>
       </div>
     )
 }
