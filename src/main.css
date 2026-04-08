@@ -113,6 +113,40 @@ body {
   font-size: 0.9rem;
 }
 
+.error-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #12002b;
+  padding: 1rem;
+}
+
+.error-block {
+  width: 40%;
+  height: 50%;
+  background-color: white;
+  padding: 1rem;
+}
+
+.error-404 {
+  color: #42b983;
+}
+
+.error-text {
+  display: inline-block;
+  margin-bottom: 3rem;
+}
+
+.error-button {
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  margin-bottom: 2rem;
+  }
+
 @media (min-width: 920px) {
   .hero {
     height: 400px;
