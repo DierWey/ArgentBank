@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import store from "./redux/store.jsx";
+import store from "./store/store.jsx";
 import Home from "./pages/home/home.jsx";
 import Signin from "./pages/signin/signin.jsx";
 import User from "./pages/user/user.jsx";

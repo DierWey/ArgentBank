@@ -1,11 +1,18 @@
 import {useState} from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
+import { setToken, setUser, updateUserName } from "../../store/userSlice.jsx"
+import { useDispatch } from "react-redux"
 
 function Form() {
+
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    // const selector = useSelector
+    
     /* Setters pour les onChange() (champs controlés) */
     const [email, setEmail] = useState("tony@stark.com")
     const [password, setPassword] = useState("password123")
+    
     /* Test API */
     const urlApi = "http://localhost:3001/api/v1";
    	const handleSubmit = async (e) => {
@@ -18,16 +25,47 @@ function Form() {
             },
             body: JSON.stringify({ email, password }),
         })
+
         if (response.status !== 200) {
             console.log(response.status)
             console.log("ça ne fonctionne pas")
+            // Renvoyer sur la page d'erreur ou afficher un message d'erreur avec alert() ?
+            alert("L'identifiant ou le mot de passe n'est pas valide")
+            // ou 
+            // navigate("*")
         } else {
-            console.log(response.status)
-            console.log("ça fonctionne")
+            // console.log("response.status =", response.status, "API OK")
             const userLogin = await response.json()
-            console.log(userLogin)
-            const token = await userLogin.body.token
-            console.log(token)
+            // console.log(userLogin)
+            const token = userLogin.body.token
+            // console.log(token)
+            dispatch(setToken(token))
+            
+                /* Un nouveau fetch pour récupérer le firstName et le userName
+                Relance un appel à l'API user/profile comme suit : */
+                const responseProfile = await fetch(`${urlApi}/user/profile`, {
+                    method: 'GET',
+                    headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${token}`,
+                    },
+                })
+                if (responseProfile.status !== 200) {
+                    console.log(responseProfile.status)
+                    console.log("ça ne fonctionne pas")
+                    // Gestion de l'erreur : voir plus haut (ligne 32)
+                } else {
+                    // console.log("On peut récupérer les infos")
+                    const userProfile = await responseProfile.json()
+                    // console.log(userProfile)
+                    const firstName = userProfile.body.firstName
+                    // console.log(firstName)
+                    dispatch(setUser(firstName))
+                    const userName = userProfile.body.userName
+                    // console.log(userName)
+                    dispatch(updateUserName(userName))
+                }
+
             navigate("/user")
         }
 	}

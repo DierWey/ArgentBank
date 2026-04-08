@@ -60,6 +60,11 @@ body {
   margin-right: 0.5rem;
 }
 
+.main-nav-firstName {  
+  text-decoration: none;
+  padding-inline-end: 0.5rem;
+}
+
 .fa {
   margin-right: 4px;
 }
