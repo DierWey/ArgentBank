@@ -24,13 +24,17 @@ const userSlice = createSlice({
         /* Récupération du token */
         setToken: (state, action)=>{state.token = action.payload},
 
-        /* récupération du first name de l'utilisateur */
-        setUser: (state, action)=>{state.firstName = action.payload},
+        // récupération du first name de l'utilisateur
+        // Non ! Récupération des informations de l'utilisteur, soit le firstName ET le userName !
+        // Donc, ajouter ligne 31 ?
+        setFirstName: (state, action)=>{state.firstName = action.payload},
+
+        setUserName: (state, action)=>{state.userName = action.payload},
         
         /* changer le UserName */
         updateUserName: (state, action)=>{state.userName = action.payload},
     },
 })
 
-export const { setToken, setUser, updateUserName } = userSlice.actions
+export const { setToken, setFirstName, setUserName, updateUserName } = userSlice.actions
 export default userSlice.reducer

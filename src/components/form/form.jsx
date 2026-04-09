@@ -1,17 +1,18 @@
 import {useState} from "react"
 import { useNavigate } from "react-router-dom"
-import { setToken, setUser, updateUserName } from "../../store/userSlice.jsx"
+import { setToken, setFirstName, setUserName } from "../../store/userSlice.jsx"
 import { useDispatch } from "react-redux"
 
 function Form() {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // const selector = useSelector
     
     /* Setters pour les onChange() (champs controlés) */
     const [email, setEmail] = useState("tony@stark.com")
-    const [password, setPassword] = useState("password123")
+    const [password, setPassword] = useState("password123")    
+    /* Setter pour rendre visible le message d'erreur de saisie dans le formulaire */
+    const [isVisible, setIsVisible] = useState(false)
     
     /* Test API */
     const urlApi = "http://localhost:3001/api/v1";
@@ -29,10 +30,8 @@ function Form() {
         if (response.status !== 200) {
             console.log(response.status)
             console.log("ça ne fonctionne pas")
-            // Renvoyer sur la page d'erreur ou afficher un message d'erreur avec alert() ?
-            alert("L'identifiant ou le mot de passe n'est pas valide")
-            // ou 
-            // navigate("*")
+            // Rendre visible un message d'erreur dans le formulaire
+            setIsVisible(true)
         } else {
             // console.log("response.status =", response.status, "API OK")
             const userLogin = await response.json()
@@ -55,15 +54,16 @@ function Form() {
                     console.log("ça ne fonctionne pas")
                     // Gestion de l'erreur : voir plus haut (ligne 32)
                 } else {
-                    // console.log("On peut récupérer les infos")
                     const userProfile = await responseProfile.json()
-                    // console.log(userProfile)
+                    // console.log("userProfile: ", userProfile)
+
                     const firstName = userProfile.body.firstName
-                    // console.log(firstName)
-                    dispatch(setUser(firstName))
+                    // console.log("firstName: ", firstName)
+                    dispatch(setFirstName(firstName))
+                    
                     const userName = userProfile.body.userName
-                    // console.log(userName)
-                    dispatch(updateUserName(userName))
+                    // console.log("userName: ", userName)
+                    dispatch(setUserName(userName))
                 }
 
             navigate("/user")
@@ -90,6 +90,9 @@ function Form() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
             />
+        </div>
+        <div className="input-error" style={{ display: isVisible ? 'block' : 'none' }}>
+            The Username or Password is invalid!
         </div>
         <div className="input-remember">
             <input 
