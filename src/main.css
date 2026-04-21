@@ -329,6 +329,46 @@ body {
   color: #fff;
 }
 
+.newUserName-modal {
+  position: absolute;
+  background: #12002b6c;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.newUserName-form {
+  background: #fff;
+  padding: 5rem 4rem;
+  max-width: 156px;
+}
+.newUserName-label {
+  margin-bottom: 0.2rem;
+  font-weight: bold;
+  color:#2c3e50;
+  display: flex;
+  justify-content: flex-start;
+}
+.newUserName-input {
+  border: 1px solid #12002b;
+}
+input.newUserName-input, textarea {
+  background: white;
+}
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+.btn-newUserName {
+  border-color: #00bc77;
+  background-color: #00bc77;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+}
+
 @media (min-width: 720px) {
   .account {
     flex-direction: row;

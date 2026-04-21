@@ -26,7 +26,7 @@ const userSlice = createSlice({
 
         // récupération du first name de l'utilisateur
         // Non ! Récupération des informations de l'utilisteur, soit le firstName ET le userName !
-        // Donc, ajouter ligne 31 ?
+        // Donc, ajouter ligne 32 ?
         setFirstName: (state, action)=>{state.firstName = action.payload},
 
         setUserName: (state, action)=>{state.userName = action.payload},

@@ -1,7 +1,26 @@
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import { useNavigate } from "react-router-dom"
 import { setToken, setFirstName, setUserName } from "../../store/userSlice.jsx"
 import { useDispatch } from "react-redux"
+
+
+// *** Remember Me *** //
+/*
+
+Rappel useEffect
+
+useEffect(()=>{
+    
+}, [])
+
+- On lui passe un premier parametre (le call-back) qui sera executé dés lors
+qu'une dépendance change.
+- En second parametre : un tableau de dépendances (variables)
+- Si une variable (dépendance) a changé depuis le dernier rendu, alors le call-back 
+est automatiquement appelé
+
+*/
+
 
 function Form() {
 
@@ -13,8 +32,10 @@ function Form() {
     const [password, setPassword] = useState("password123")    
     /* Setter pour rendre visible le message d'erreur de saisie dans le formulaire */
     const [isVisible, setIsVisible] = useState(false)
+    /* ** Setter(s) pour le Remember Me ** */
+    const [rememberMe, setRememberMe] = useState(false)
     
-    /* Test API */
+    /* Appel à l'API user/login permettant de récupérer (dans le store) le token */
     const urlApi = "http://localhost:3001/api/v1";
    	const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,31 +61,40 @@ function Form() {
             // console.log(token)
             dispatch(setToken(token))
             
-                /* Un nouveau fetch pour récupérer le firstName et le userName
-                Relance un appel à l'API user/profile comme suit : */
-                const responseProfile = await fetch(`${urlApi}/user/profile`, {
+                /* Appel à l'API user/profile (method GET) afin de stocker (dans le store)
+                le firstName et le userName */
+                const responseGet = await fetch(`${urlApi}/user/profile`, {
                     method: 'GET',
                     headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                 })
-                if (responseProfile.status !== 200) {
-                    console.log(responseProfile.status)
+                if (responseGet.status !== 200) {
+                    console.log(responseGet.status)
                     console.log("ça ne fonctionne pas")
-                    // Gestion de l'erreur : voir plus haut (ligne 32)
+                    // Gestion de l'erreur
                 } else {
-                    const userProfile = await responseProfile.json()
+                    const userProfile = await responseGet.json()
                     // console.log("userProfile: ", userProfile)
-
                     const firstName = userProfile.body.firstName
                     // console.log("firstName: ", firstName)
-                    dispatch(setFirstName(firstName))
-                    
+                    dispatch(setFirstName(firstName))                    
                     const userName = userProfile.body.userName
                     // console.log("userName: ", userName)
                     dispatch(setUserName(userName))
                 }
+            
+            if (rememberMe) {
+                localStorage.setItem("username", email);
+                // localStorage.setItem("password", password); NON, par sécurité
+                localStorage.setItem("rememberMe", true);
+                console.log("local storage email", localStorage.username)
+            } else {
+                localStorage.removeItem("username");
+                // localStorage.removeItem("password"); voir ligne 90
+                localStorage.removeItem("rememberMe");
+            }
 
             navigate("/user")
         }
@@ -98,9 +128,9 @@ function Form() {
             <input 
                 type="checkbox"
                 id="remember-me"
-                /*checked="rememberMe"
-                onChange={(e) => setRememberMe(e.target.checked)}
-                */
+                /* remember me */
+                // checked="rememberMe"
+                // onChange={(e) => setRememberMe(e.target.checked)}
             />
             <label htmlFor="remember-me">Remember me</label>
         </div>
