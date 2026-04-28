@@ -9,9 +9,9 @@ import { useDispatch } from "react-redux"
 
 Rappel useEffect
 
-useEffect(()=>{
-    
-}, [])
+    useEffect(()=>{
+        
+    }, [])
 
 - On lui passe un premier parametre (le call-back) qui sera executé dés lors
 qu'une dépendance change.
@@ -24,16 +24,42 @@ est automatiquement appelé
 
 function Form() {
 
+    // console.log("email: tony@stark.com", "password: password123")
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
     
     /* Setters pour les onChange() (champs controlés) */
-    const [email, setEmail] = useState("tony@stark.com")
-    const [password, setPassword] = useState("password123")    
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")    
     /* Setter pour rendre visible le message d'erreur de saisie dans le formulaire */
     const [isVisible, setIsVisible] = useState(false)
     /* ** Setter(s) pour le Remember Me ** */
     const [rememberMe, setRememberMe] = useState(false)
+
+            
+    /* A l'arrivé sur la page, on vérifie que email est dans le local storage
+    Si c'est le cas, alors il est placé automatiquement dans l'input Username (cf. ligne 124)
+    Et Remember Me est affiché coché */
+    useEffect(() => {
+        const storedEmail = localStorage.getItem('storageEmail')
+        if (storedEmail) {
+            setEmail(storedEmail)
+            setRememberMe(true)
+        }
+    }, [])
+
+    /* Si Remember Me est coché, alors email est stocké dans le local storage
+       Sinon, local storage est purgé */
+    useEffect(() => {
+        if (rememberMe) {
+            localStorage.setItem('storageEmail', email)
+            // localStorage.setItem('storageEmail', JSON.stingify(email))
+        } else {
+            localStorage.removeItem('storageEmail')
+        }
+    }, [rememberMe, email])
+    
     
     /* Appel à l'API user/login permettant de récupérer (dans le store) le token */
     const urlApi = "http://localhost:3001/api/v1";
@@ -84,17 +110,6 @@ function Form() {
                     // console.log("userName: ", userName)
                     dispatch(setUserName(userName))
                 }
-            
-            if (rememberMe) {
-                localStorage.setItem("username", email);
-                // localStorage.setItem("password", password); NON, par sécurité
-                localStorage.setItem("rememberMe", true);
-                console.log("local storage email", localStorage.username)
-            } else {
-                localStorage.removeItem("username");
-                // localStorage.removeItem("password"); voir ligne 90
-                localStorage.removeItem("rememberMe");
-            }
 
             navigate("/user")
         }
@@ -129,8 +144,8 @@ function Form() {
                 type="checkbox"
                 id="remember-me"
                 /* remember me */
-                // checked="rememberMe"
-                // onChange={(e) => setRememberMe(e.target.checked)}
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
             />
             <label htmlFor="remember-me">Remember me</label>
         </div>
