@@ -12,26 +12,24 @@ en se basant sur un objet définissant l'état initial et les fonctions réductr
 Elle doit donc être composée :
     - d'un nom qui identifie la slice (ici : "user")
     - d'une valeur pour l'initialState (ici la constante initialState déclarée plus haut)
-    - un ou plusieurs reducers pour savoir comment le state peut être mis à jour */
+    - un ou plusieurs reducers pour permettre la mise à jour du state */
     
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        /* reducer : fonction qui prend en parametres un etat et une action.
-        /* gestion 'automatique' de l'immutabilité : à indiquer en commentaire */
+        // reducer : fonction qui prend en parametres un etat et une action.
 
-        /* Récupération du token */
+        // Récupération du token
         setToken: (state, action)=>{state.token = action.payload},
 
-        // récupération du first name de l'utilisateur
-        // Non ! Récupération des informations de l'utilisteur, soit le firstName ET le userName !
-        // Donc, ajouter ligne 32 ?
+        // Récupération des informations de l'utilisteur, soit le firstName ET le userName !
+        // Donc, ajouter ligne 31
         setFirstName: (state, action)=>{state.firstName = action.payload},
 
         setUserName: (state, action)=>{state.userName = action.payload},
         
-        /* changer le UserName */
+        // changer le UserName
         updateUserName: (state, action)=>{state.userName = action.payload},
     },
 })
