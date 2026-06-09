@@ -2,16 +2,12 @@ import { NavLink } from "react-router-dom"
 import logo from '../../assets/images/argentBankLogo.webp'
 import { useSelector, useDispatch } from 'react-redux'
 
-/* Avoir 2 cas :
+/* 2 cas :
 - Si token === null, alors affichage par défaut
 - Else : {firstName} et "Sign out" après le logo (fa-user-circle)
 Au clic sur Sign out, token revient à son initialState, cad null 
-Idem au clic sur le logo Argent bank : onClick={signOut}
+Idem au clic sur le logo Argent bank : onClick={signOut} */
 
-Quelle est la durée de vie du Store ? La session ?
-Est-ce qu'on doit afficher le firstName ou le userName après le logo ?
-Si c'est userName, alors l'update du userName modifie le header, et firstName n'est pas necessaire
-dans userSlice.jsx et form.jsx. */
 
 function Header() {
     const selector = useSelector

@@ -1,5 +1,6 @@
-import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Provider } from "react-redux";
+// Composant de react-redux qui permet de rendre le store Redux accessible à toute l’application 
 
 import store from "./store/store.jsx";
 import Home from "./pages/home/home.jsx";

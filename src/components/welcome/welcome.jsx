@@ -1,6 +1,6 @@
 import {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
-import { updateUserName } from "../../store/userSlice.jsx"
+import { setUserName } from "../../store/userSlice.jsx"
 
 function Welcome() {
     
@@ -12,7 +12,7 @@ function Welcome() {
   // Adresse de l'API
   const urlApi = "http://localhost:3001/api/v1";
 
-  // Préparation des Selectors et du Dispatch
+  // Préparation des Selectors (pour lire le token et le userName dans le store) et du dispatch
   const token = useSelector((state) => state.user.token)
   const userName = useSelector((state) => state.user.userName)
   const dispatch = useDispatch()
@@ -42,7 +42,7 @@ function Welcome() {
       console.log("userProfile: ", userProfile)              
       const userName = userProfile.body.userName
       console.log("userName: ", userName)
-      dispatch(updateUserName(userName))
+      dispatch(setUserName(userName))
       //Fermer la modale
       setShowModal(false)
     } else {

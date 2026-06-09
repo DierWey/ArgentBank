@@ -3,28 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { setToken, setFirstName, setUserName } from "../../store/userSlice.jsx"
 import { useDispatch } from "react-redux"
 
-
-// *** Remember Me *** //
-/*
-
-Rappel useEffect
-
-    useEffect(()=>{
-        
-    }, [])
-
-- On lui passe un premier parametre (le call-back) qui sera executé dés lors
-qu'une dépendance change.
-- En second parametre : un tableau de dépendances (variables)
-- Si une variable (dépendance) a changé depuis le dernier rendu, alors le call-back 
-est automatiquement appelé
-
-*/
-
-
 function Form() {
-
-    // console.log("email: tony@stark.com", "password: password123")
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -36,10 +15,9 @@ function Form() {
     const [isVisible, setIsVisible] = useState(false)
     /* ** Setter(s) pour le Remember Me ** */
     const [rememberMe, setRememberMe] = useState(false)
-
             
     /* A l'arrivé sur la page, on vérifie que email est dans le local storage
-    Si c'est le cas, alors il est placé automatiquement dans l'input Username (cf. ligne 124)
+    Si c'est le cas, alors il est placé automatiquement dans l'input Username (cf. ligne 101)
     Et Remember Me est affiché coché */
     useEffect(() => {
         const storedEmail = localStorage.getItem('storageEmail')
@@ -54,7 +32,6 @@ function Form() {
     useEffect(() => {
         if (rememberMe) {
             localStorage.setItem('storageEmail', email)
-            // localStorage.setItem('storageEmail', JSON.stingify(email))
         } else {
             localStorage.removeItem('storageEmail')
         }
@@ -87,7 +64,7 @@ function Form() {
             // console.log(token)
             dispatch(setToken(token))
             
-                /* Appel à l'API user/profile (method GET) afin de stocker (dans le store)
+                /* Appel à l'API user/profile (method GET) afin de stocker dans le store
                 le firstName et le userName */
                 const responseGet = await fetch(`${urlApi}/user/profile`, {
                     method: 'GET',
