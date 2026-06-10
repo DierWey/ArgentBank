@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react"
 import { useNavigate } from "react-router-dom"
-import { setToken, setFirstName, setUserName } from "../../store/userSlice.jsx"
+import { setToken, setUserName } from "../../store/userSlice.jsx"
 import { useDispatch } from "react-redux"
 
 function Authentification() {
@@ -65,7 +65,7 @@ function Authentification() {
             dispatch(setToken(token))
             
                 /* Appel à l'API user/profile (method GET) afin de stocker dans le store
-                le firstName et le userName */
+                le userName */
                 const responseGet = await fetch(`${urlApi}/user/profile`, {
                     method: 'GET',
                     headers: {
@@ -79,10 +79,7 @@ function Authentification() {
                     // Gestion de l'erreur
                 } else {
                     const userProfile = await responseGet.json()
-                    // console.log("userProfile: ", userProfile)
-                    const firstName = userProfile.body.firstName
-                    // console.log("firstName: ", firstName)
-                    dispatch(setFirstName(firstName))                    
+                    // console.log("userProfile: ", userProfile)        
                     const userName = userProfile.body.userName
                     // console.log("userName: ", userName)
                     dispatch(setUserName(userName))

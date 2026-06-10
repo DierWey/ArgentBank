@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 /* 2 cas :
 - Si token === null, alors affichage par défaut
-- Else : {firstName} et "Sign out" après le logo (fa-user-circle)
+- Else : {userName} et "Sign out" après le logo (fa-user-circle)
 Au clic sur Sign out, token revient à son initialState, cad null 
 Idem au clic sur le logo Argent bank : onClick={signOut} */
 
@@ -12,7 +12,7 @@ Idem au clic sur le logo Argent bank : onClick={signOut} */
 function Header() {
     const selector = useSelector
     const token = selector((state) => state.user.token)
-    const firstName = selector((state) => state.user.firstName)
+    const userName = selector((state) => state.user.userName)
     const dispatch = useDispatch
     const signOut = () => {dispatch(setToken(null))}
 
@@ -30,13 +30,13 @@ function Header() {
                 {token === null ?
                     <NavLink className="main-nav-item" to="/signin">
                     <i className="fa fa-user-circle"></i>
-                    <span>{firstName}</span>
+                    <span>{userName}</span>
                     Sign In
                     </NavLink>
                     : 
                     <NavLink onClick={signOut} className="main-nav-item" to="/">
                     <i className="fa fa-user-circle"></i>
-                    <span className="main-nav-firstName">{firstName} </span>
+                    <span className="main-nav-userName">{userName} </span>
                     <i className="fa fa-sign-out"></i>
                     Sign Out
                     </NavLink>

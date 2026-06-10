@@ -12,7 +12,6 @@ Elle doit donc être composée :
 // Définition de l'état initial
 const initialState = {
 		token: null,
-		firstName: null,
         userName: null,
 }
 
@@ -22,15 +21,12 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setToken: (state, action)=>{state.token = action.payload},
-
-        setFirstName: (state, action)=>{state.firstName = action.payload},
-
         setUserName: (state, action)=>{state.userName = action.payload},
     },
 })
 
 //Export des actions et du reducer
-export const { setToken, setFirstName, setUserName } = userSlice.actions
+export const { setToken, setUserName } = userSlice.actions
 export default userSlice.reducer
 
 
