@@ -22,6 +22,18 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setToken: (state, action)=>{state.token = action.payload},
+
+        setFirstName: (state, action)=>{state.firstName = action.payload},
+
+        setUserName: (state, action)=>{state.userName = action.payload},
+    },
+})
+
+//Export des actions et du reducer
+export const { setToken, setFirstName, setUserName } = userSlice.actions
+export default userSlice.reducer
+
+
         /* setToken est une fonction reducer qui retourne une action au format 
         { type: "user/setToken", payload: "valeur passée à dispatch(setToken(valeur))" } */
 
@@ -33,13 +45,3 @@ const userSlice = createSlice({
         Mais en Redux classique, l’état doit toujours être immuable : on ne modifie jamais directement 
         un objet ou un tableau, on en crée toujours une nouvelle copie. 
         En fait, Immer crée une copie immutable de l'état avec la nouvelle valeur de token*/
-
-        setFirstName: (state, action)=>{state.firstName = action.payload},
-
-        setUserName: (state, action)=>{state.userName = action.payload},
-    },
-})
-
-//Export des actions et du reducer
-export const { setToken, setFirstName, setUserName } = userSlice.actions
-export default userSlice.reducer

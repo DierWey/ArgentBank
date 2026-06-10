@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { setToken, setFirstName, setUserName } from "../../store/userSlice.jsx"
 import { useDispatch } from "react-redux"
 
-function Form() {
+function Authentification() {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -130,4 +130,4 @@ function Form() {
     </form>
 }
 
-export default Form
+export default Authentification
