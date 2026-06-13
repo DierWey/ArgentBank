@@ -16,8 +16,8 @@ function Authentification() {
     /* ** Setter(s) pour le Remember Me ** */
     const [rememberMe, setRememberMe] = useState(false)
             
-    /* A l'arrivé sur la page, on vérifie que email est dans le local storage. Si c'est le cas, 
-    alors email est placé automatiquement dans la valeur de l'input Username (cf. ligne 108),
+    /* A l'arrivé sur la page, on vérifie que email est dans le local storage
+    Si c'est le cas, alors il est placé automatiquement dans l'input Username (cf. ligne 101)
     Et Remember Me est affiché coché */
     useEffect(() => {
         const storedEmail = localStorage.getItem('storageEmail')
@@ -36,7 +36,8 @@ function Authentification() {
             localStorage.removeItem('storageEmail')
         }
     }, [rememberMe, email])
-        
+    
+    
     /* Appel à l'API user/login permettant de récupérer (dans le store) le token */
     const urlApi = "http://localhost:3001/api/v1";
    	const handleSubmit = async (e) => {
@@ -49,22 +50,22 @@ function Authentification() {
             },
             body: JSON.stringify({ email, password }),
         })
-        // Si la requête a échoué
+
         if (response.status !== 200) {
             console.log(response.status)
             console.log("ça ne fonctionne pas")
             // Rendre visible un message d'erreur dans le formulaire
             setIsVisible(true)
         } else {
+            // console.log("response.status =", response.status, "API OK")
             const userLogin = await response.json()
+            // console.log(userLogin)
             const token = userLogin.body.token
-
-            // SI "Remember Me" est coché, sauvegarde le token et userName dans le local storage
-            if (rememberMe) {
-                // Sauvegarde du token dans le local storage
-                localStorage.setItem('token', token);
-                /* Récupération de userName et sauvegarde dans le local storage si la requête 
-                fonctionne */
+            // console.log(token)
+            dispatch(setToken(token))
+            
+                /* Appel à l'API user/profile (method GET) afin de stocker dans le store
+                le userName */
                 const responseGet = await fetch(`${urlApi}/user/profile`, {
                     method: 'GET',
                     headers: {
@@ -72,36 +73,25 @@ function Authentification() {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-                if (responseGet.status === 200) {
-                    const userProfile = await responseGet.json();
-                    const userName = userProfile.body.userName;
-                    localStorage.setItem('userName', userName);
+                if (responseGet.status !== 200) {
+                    console.log(responseGet.status)
+                    console.log("ça ne fonctionne pas")
+                    // Gestion de l'erreur
+                } else {
+                    const userProfile = await responseGet.json()
+                    // console.log("userProfile: ", userProfile)        
+                    const userName = userProfile.body.userName
+                    // console.log("userName: ", userName)
+                    dispatch(setUserName(userName))
                 }
-            }
 
-            // Met à jour userName dans le store
-            dispatch(setToken(token));
-            const responseGet = await fetch(`${urlApi}/user/profile`, {
-                method: 'GET',
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            if (responseGet.status === 200) {
-                const userProfile = await responseGet.json();
-                const userName = userProfile.body.userName;
-                dispatch(setUserName(userName));
-            }
-
-            navigate("/user");
+            navigate("/user")
         }
-    }
+	}
     
     return <form onSubmit={handleSubmit}>
         <div className="input-wrapper">
             <label htmlFor="username">Username</label>
-            {/* Champ contrôlé. Quand sa valeur change, l'état de email est mis à jour*/}
             <input 
                 type="text" 
                 id="username"
@@ -112,7 +102,6 @@ function Authentification() {
         </div>
         <div className="input-wrapper">
             <label htmlFor="password">Password</label>
-            {/* Champ contrôlé. Quand sa valeur change, l'état de password est mis à jour*/}
             <input 
                 type="password"
                 id="password"
@@ -125,11 +114,10 @@ function Authentification() {
             The Username or Password is invalid!
         </div>
         <div className="input-remember">
-            {/* Champ contrôlé. Quand la case à coché est cliquée, 
-            l'état de rememberMe change (true ou false)*/}
             <input 
                 type="checkbox"
                 id="remember-me"
+                /* remember me */
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
             />
