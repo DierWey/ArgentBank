@@ -53,19 +53,16 @@ function Authentification() {
         if (response.status !== 200) {
             console.log(response.status)
             console.log("ça ne fonctionne pas")
-            // Rendre visible un message d'erreur dans le formulaire
+            // Rendre visible un message d'erreur dans le formulaire ?
             setIsVisible(true)
+        // Sinon
         } else {
             const userLogin = await response.json()
             const token = userLogin.body.token
+            // Sauvegarde du token dans le local storage
+            localStorage.setItem('token', token);
 
-            // SI "Remember Me" est coché, sauvegarde le token et userName dans le local storage
-            if (rememberMe) {
-                // Sauvegarde du token dans le local storage
-                localStorage.setItem('token', token);
-                /* Récupération de userName et sauvegarde dans le local storage si la requête 
-                fonctionne */
-                const responseGet = await fetch(`${urlApi}/user/profile`, {
+            const responseGet = await fetch(`${urlApi}/user/profile`, {
                     method: 'GET',
                     headers: {
                         Accept: "application/json",
@@ -77,19 +74,25 @@ function Authentification() {
                     const userName = userProfile.body.userName;
                     localStorage.setItem('userName', userName);
                 }
+
+            // Si "Remember Me" est coché, sauvegarde de l'email dans le local storage
+            if (rememberMe) {
+                localStorage.setItem("storageEmail", email)                
             }
 
-            // Met à jour userName dans le store
+            // Mise à jour du token dans le store
             dispatch(setToken(token));
-            const responseGet = await fetch(`${urlApi}/user/profile`, {
+
+            // Mise à jour du userName dans le store
+            const responseGetUser = await fetch(`${urlApi}/user/profile`, {
                 method: 'GET',
                 headers: {
                     Accept: "application/json",
                     Authorization: `Bearer ${token}`,
                 },
             })
-            if (responseGet.status === 200) {
-                const userProfile = await responseGet.json();
+            if (responseGetUser.status === 200) {
+                const userProfile = await responseGetUser.json();
                 const userName = userProfile.body.userName;
                 dispatch(setUserName(userName));
             }
