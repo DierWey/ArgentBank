@@ -1,6 +1,6 @@
 import {useState} from "react"
 import { useSelector, useDispatch } from 'react-redux'
-import { setUserName, setFirstName, setLastName } from "../../store/userSlice.jsx"
+import { setUserName } from "../../store/userSlice.jsx"
 
 function Welcome() {
     
@@ -12,11 +12,9 @@ function Welcome() {
   // Adresse de l'API
   const urlApi = "http://localhost:3001/api/v1";
 
-  // Préparation des Selectors et du dispatch
+  // Préparation des Selectors (pour lire le token et le userName dans le store) et du dispatch
   const token = useSelector((state) => state.user.token)
   const userName = useSelector((state) => state.user.userName)
-  const firstName = useSelector((state) => state.user.firstName)
-  const lastName = useSelector((state) => state.user.lastName)
   const dispatch = useDispatch()
  
   // (Au clic sur "Edit name") fait apparaitre la modal
@@ -59,40 +57,14 @@ function Welcome() {
       <article style={{ display: showModal ? 'block' : 'none' }}>
         <div className="newUserName-modal">
           <div className="newUserName-form">
-            <h1>Edit user info</h1>
-            <div className="newUserName-container">
-              <div className="newUserName-label">User name:</div>
-              <input 
-                  type="text"
-                  className="newUserName-input"
-                  id="newUserName"
-                  size="12"
-                  value={newUserName}
-                  onChange={(e) => setNewUserName(e.target.value)}
-              />
-            </div>
-            <div className="name-container">
-              <div className="newUserName-label">First Name:</div>
-              <input 
-                  type="text"
-                  className="name-input"
-                  id="firstname"
-                  size="12"
-                  value={firstName}
-                  disabled
-              />
-            </div>
-            <div className="name-container">
-              <div className="newUserName-label">Last Name:</div>
-              <input 
-                  type="text"
-                  className="name-input"
-                  id="lastname"
-                  size="12"
-                  value={lastName}
-                  disabled
-              />
-            </div>
+            <div className="newUserName-label">New name:</div>
+            <input 
+                type="text"
+                className="newUserName-input"
+                id="newUserName"
+                value={newUserName}
+                onChange={(e) => setNewUserName(e.target.value)}
+            />
             <div className="input-error" style={{ display: showMessage ? 'block' : 'none' }}>
               A new name is required!
             </div>
@@ -108,7 +80,7 @@ function Welcome() {
         <h1>Welcome back
             <br />{userName}!
         </h1>
-        <button onClick={openModal} className="edit-button">Edit User Info</button>
+        <button onClick={openModal} className="edit-button">Edit Name</button>
       </div>
     </>
   )

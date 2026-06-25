@@ -1,145 +1,134 @@
-import {useState, useEffect} from "react"
-import { useNavigate } from "react-router-dom"
-import { setToken, setUserName } from "../../store/userSlice.jsx"
-import { useDispatch } from "react-redux"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { setToken, setUserName, setFirstName, setLastName } from "../../store/userSlice.jsx";
+import { useDispatch } from "react-redux";
 
 function Authentification() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    
     /* Setters pour les onChange() (champs controlés) */
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")    
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     /* Setter pour rendre visible le message d'erreur de saisie dans le formulaire */
-    const [isVisible, setIsVisible] = useState(false)
-    /* ** Setter(s) pour le Remember Me ** */
-    const [rememberMe, setRememberMe] = useState(false)
-            
-    /* A l'arrivé sur la page, on vérifie que email est dans le local storage. Si c'est le cas, 
-    alors email est placé automatiquement dans la valeur de l'input Username (cf. ligne 108),
-    Et Remember Me est affiché coché */
+    const [isVisible, setIsVisible] = useState(false);
+    /* Setter(s) pour le Remember Me */
+    const [rememberMe, setRememberMe] = useState(false);
+
+    /* À l'arrivée sur la page, on vérifie que email est dans le local storage */
     useEffect(() => {
-        const storedEmail = localStorage.getItem('storageEmail')
+        const storedEmail = localStorage.getItem('storageEmail');
         if (storedEmail) {
-            setEmail(storedEmail)
-            setRememberMe(true)
+            setEmail(storedEmail);
+            setRememberMe(true);
         }
-    }, [])
+    }, []);
 
-    /* Si Remember Me est coché, alors email est stocké dans le local storage
-       Sinon, local storage est purgé */
+    /* Si Remember Me est coché, alors email est stocké dans le local storage */
     useEffect(() => {
-        if (rememberMe) {
-            localStorage.setItem('storageEmail', email)
+        if (rememberMe && email) {
+            localStorage.setItem('storageEmail', email);
         } else {
-            localStorage.removeItem('storageEmail')
+            localStorage.removeItem('storageEmail');
         }
-    }, [rememberMe, email])
-        
-    /* Appel à l'API user/login permettant de récupérer (dans le store) le token */
+    }, [rememberMe, email]);
+
     const urlApi = "http://localhost:3001/api/v1";
-   	const handleSubmit = async (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`${urlApi}/user/login`, {
-            method: 'POST',
-            headers: {
-                Accept: "application/json, text/plain, */*",
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        })
-        // Si la requête a échoué
-        if (response.status !== 200) {
-            console.log(response.status)
-            console.log("ça ne fonctionne pas")
-            // Rendre visible un message d'erreur dans le formulaire ?
-            setIsVisible(true)
-        // Sinon
-        } else {
-            const userLogin = await response.json()
-            const token = userLogin.body.token
-            // Sauvegarde du token dans le local storage
-            localStorage.setItem('token', token);
+        try {
+            // Appel à /user/login
+            const loginResponse = await fetch(`${urlApi}/user/login`, {
+                method: 'POST',
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-            const responseGet = await fetch(`${urlApi}/user/profile`, {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                if (responseGet.status === 200) {
-                    const userProfile = await responseGet.json();
-                    const userName = userProfile.body.userName;
-                    localStorage.setItem('userName', userName);
-                }
-
-            // Si "Remember Me" est coché, sauvegarde de l'email dans le local storage
-            if (rememberMe) {
-                localStorage.setItem("storageEmail", email)                
+            if (!loginResponse.ok) {
+                throw new Error("Invalid credentials");
             }
 
-            // Mise à jour du token dans le store
-            dispatch(setToken(token));
+            const userLogin = await loginResponse.json();
+            const token = userLogin.body.token;
 
-            // Mise à jour du userName dans le store
-            const responseGetUser = await fetch(`${urlApi}/user/profile`, {
+            // Appel unique à /user/profile
+            const profileResponse = await fetch(`${urlApi}/user/profile`, {
                 method: 'GET',
                 headers: {
                     Accept: "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-            })
-            if (responseGetUser.status === 200) {
-                const userProfile = await responseGetUser.json();
-                const userName = userProfile.body.userName;
-                dispatch(setUserName(userName));
+            });
+
+            if (!profileResponse.ok) {
+                throw new Error("Failed to fetch profile");
             }
 
+            const userProfile = await profileResponse.json();
+            const { userName, firstName, lastName } = userProfile.body;
+
+            // Mise à jour du localStorage
+            if (rememberMe) {
+                localStorage.setItem("storageEmail", email);
+            }
+            localStorage.setItem('token', token);
+            localStorage.setItem('userName', userName);
+
+            // Mise à jour du store Redux
+            dispatch(setToken(token));
+            dispatch(setUserName(userName));
+            dispatch(setFirstName(firstName));
+            dispatch(setLastName(lastName));
+
+            // Redirection
             navigate("/user");
+        } catch (error) {
+            console.error(error);
+            setIsVisible(true);
         }
-    }
-    
-    return <form onSubmit={handleSubmit}>
-        <div className="input-wrapper">
-            <label htmlFor="username">Username</label>
-            {/* Champ contrôlé. Quand sa valeur change, l'état de email est mis à jour*/}
-            <input 
-                type="text" 
-                id="username"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-        </div>
-        <div className="input-wrapper">
-            <label htmlFor="password">Password</label>
-            {/* Champ contrôlé. Quand sa valeur change, l'état de password est mis à jour*/}
-            <input 
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-        </div>
-        <div className="input-error" style={{ display: isVisible ? 'block' : 'none' }}>
-            The Username or Password is invalid!
-        </div>
-        <div className="input-remember">
-            {/* Champ contrôlé. Quand la case à coché est cliquée, 
-            l'état de rememberMe change (true ou false)*/}
-            <input 
-                type="checkbox"
-                id="remember-me"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-            />
-            <label htmlFor="remember-me">Remember me</label>
-        </div>
-        <button type="submit" className="sign-in-button">Sign In</button>
-    </form>
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div className="input-wrapper">
+                <label htmlFor="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="input-wrapper">
+                <label htmlFor="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="input-error" style={{ display: isVisible ? 'block' : 'none' }}>
+                The Username or Password is invalid!
+            </div>
+            <div className="input-remember">
+                <input
+                    type="checkbox"
+                    id="remember-me"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <label htmlFor="remember-me">Remember me</label>
+            </div>
+            <button type="submit" className="sign-in-button">Sign In</button>
+        </form>
+    );
 }
 
-export default Authentification
+export default Authentification;

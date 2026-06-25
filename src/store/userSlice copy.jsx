@@ -13,8 +13,6 @@ Elle doit donc être composée :
 const initialState = {
 		token: null,
         userName: null,
-        firstName: null,
-        lastName: null,
 }
 
 // Création de la slice    
@@ -24,13 +22,11 @@ const userSlice = createSlice({
     reducers: {
         setToken: (state, action)=>{state.token = action.payload},
         setUserName: (state, action)=>{state.userName = action.payload},
-        setFirstName: (state, action)=>{state.firstName = action.payload},
-        setLastName: (state, action)=>{state.lastName = action.payload},
     },
 })
 
 //Export des actions et du reducer
-export const { setToken, setUserName, setFirstName, setLastName } = userSlice.actions
+export const { setToken, setUserName } = userSlice.actions
 export default userSlice.reducer
 
 

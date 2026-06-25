@@ -36,18 +36,21 @@ function Header() {
             </NavLink>
             <div>           
                 {token === null ? (
-                    <NavLink className="main-nav-item" to="/signin">
-                    <i className="fa fa-user-circle"></i>
-                    <span>{userName}</span>
-                    Sign In
-                    </NavLink>
+                    <>
+                        <i className="fa fa-user-circle"></i>
+                        <NavLink className="main-nav-item" to="/signin">
+                            Sign In
+                        </NavLink>
+                    </>
                 ) : ( 
-                    <NavLink onClick={signOut} className="main-nav-item" to="/">
-                    <i className="fa fa-user-circle"></i>
-                    <span className="main-nav-userName">{userName} </span>
-                    <i className="fa fa-sign-out"></i>
-                    Sign Out
-                    </NavLink>
+                    <>
+                        <i className="fa fa-user-circle"></i>
+                        <span className="main-nav-userName">{userName} </span>
+                        <NavLink onClick={signOut} className="main-nav-item" to="/">
+                            <i className="fa fa-sign-out"></i>
+                            Sign Out
+                        </NavLink>
+                    </>
                 )}
             </div>
         </nav>

@@ -62,6 +62,7 @@ body {
 
 .main-nav-userName {  
   text-decoration: none;
+  font-weight: bold;
   padding-inline-end: 0.5rem;
 }
 
@@ -340,8 +341,15 @@ body {
 }
 .newUserName-form {
   background: #fff;
-  padding: 5rem 4rem;
-  max-width: 156px;
+  padding: 0rem 2rem 2rem 2rem;
+  max-width: 250px;
+}
+.newUserName-container, .name-container {
+  display: flex;
+  justify-content: space-between;
+}
+.name-container {
+  margin-top: 0.5rem;
 }
 .newUserName-label {
   margin-bottom: 0.2rem;
@@ -352,6 +360,10 @@ body {
 }
 .newUserName-input {
   border: 1px solid #12002b;
+}
+.name-input {
+  border: 1px solid gray;
+  background:lightgray;
 }
 input.newUserName-input, textarea {
   background: white;
@@ -366,7 +378,7 @@ input.newUserName-input, textarea {
   background-color: #00bc77;
   color: #fff;
   font-weight: bold;
-  padding: 10px;
+  padding: 10px 20px;
 }
 
 @media (min-width: 720px) {
